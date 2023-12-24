@@ -1,0 +1,196 @@
+{% extends "_base.html" %}
+
+{% block title %} List Words {%endblock title %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+    <div class="py-3 d-flex justify-content-between align-items-center px-3">
+        <h1 class="m-0 p-0 page__title">
+            <i class="fa-solid fa-table"></i>
+            Vocabulary
+            <b>Words</b>
+        </h1> 
+        <div class="input-group search__input-container">
+            <input class="form-control border-end-0 border" type="search" placeholder="Search something..." id="search_vocabulary">
+            <span class="input-group-append">
+                <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <div class="table-responsive mt-3">
+        <div id="data-table">
+            <table class="table table-striped table-hover table-bordered nowrap" id="vocabulary_table">
+                <thead>
+                    <tr>
+                        <th class="bg-primary text-white fw-bold">Word</th>
+                        <th class="bg-primary text-white fw-bold">Translation (EN)</th>
+                        <th class="bg-primary text-white fw-bold">Gender</th>
+                        <th class="bg-primary text-white fw-bold">Category</th>
+                        <th class="bg-primary text-white fw-bold">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for word in object_list %}
+                        <tr>
+                            <td>
+                                {{word.content}}
+                            </td>
+                            <td>
+                                {{word.translation_en}}
+                            </td>
+                            <td>
+                                {{ word.get_gender_display|default:"-" }}
+                            </td>
+                            <td>
+                                {{ word.get_category_display|default:"-" }}
+                            </td>
+                            <td>
+                                {% if word.notes %}
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notes-{{word.id}}">
+                                    View Notes
+                                    <i class="fa-regular fa-eye mx-1"></i>
+                                </button>
+                                <div class="modal fade" id="notes-{{word.id}}" tabindex="-1" aria-labelledby="notes-{{word.id}}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                {{word.content}}
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{word.notes}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            There are no words added yet!
+                        </td>
+                    </tr>
+                    {% endfor %}        
+                </tbody>
+            </table>
+        </div>
+        <div id="output-table">
+            <table class="table table-striped table-hover table-bordered nowrap" id="vocabulary_table">
+                <thead>
+                    <tr>
+                        <th class="bg-primary text-white fw-bold">Word</th>
+                        <th class="bg-primary text-white fw-bold">Translation (EN)</th>
+                        <th class="bg-primary text-white fw-bold">Gender</th>
+                        <th class="bg-primary text-white fw-bold">Category</th>
+                        <th class="bg-primary text-white fw-bold">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="output-table-body">        
+                </tbody>
+            </table>
+        </div>
+    </div>  
+    <div class="row d-none" id="no_results" >
+        <div class="col-12 text-center">
+            There are no words that match your search!
+        </div>
+    </div>
+</div>      
+
+{% block extra_scripts %}
+<script>
+    const searchInput = document.getElementById("search_vocabulary");
+    const dataTable = document.getElementById("data-table")
+    const outputTable = document.getElementById("output-table")
+    const outputTableBody = document.getElementById("output-table-body")
+
+    outputTable.style.display = "none"
+
+    searchInput.addEventListener("input", (e) => {
+        let q = e.target.value;
+
+        outputTableBody.innerHTML = ""
+
+        if (q.trim().length > 0) {
+            fetch("{% url 'vocabulary:list_word' %}", {
+                body: JSON.stringify({q: q}),
+                method: "POST"
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                const empty = document.getElementById("no_results")
+
+                if(data.length > 0) {
+                    empty.classList.add("d-none")                    
+
+                    dataTable.style.display = "none"
+                    outputTable.style.display = "block"
+
+                    data.forEach((item) => {
+                        const modalId = `notes-new-${item.id}`;
+                        
+                        outputTableBody.innerHTML += `
+                            <tr>
+                                <td>
+                                    ${item.content}
+                                </td>
+                                <td>
+                                    ${item.translation_en}
+                                </td>
+                                <td>
+                                    ${item.gender == null ? "-" : item.gender}
+                                </td>
+                                <td>
+                                    ${item.category == null ? "-" : item.category}
+                                </td>
+                                <td>
+                                    ${item.notes == "" ? "-" : 
+                                    `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#${modalId}">
+                                        View Notes
+                                        <i class="fa-regular fa-eye mx-1"></i>
+                                    </button>
+                                    <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="${modalId}-label">
+                                                        ${item.content}
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ${item.notes}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+                                }
+                                </td>
+                            </tr>
+                        `;
+                    });                 
+                } else {
+                    empty.classList.remove("d-none")
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        } else {
+            dataTable.style.display = "block"
+            outputTable.style.display = "none"
+        }
+    });
+</script>
+{% endblock extra_scripts %}
+
+{% endblock content %}

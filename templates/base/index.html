@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %} Home {% endblock title %}
+
+{% block content %}
+
+<div class="hero__container">
+    <div class="container d-flex justify-content-center align-items-center h-100">
+        <div class="card shadow-lg p-4 bg-white">
+            <h1 class="mb-4">Deutsch Helper</h1>
+            <h5 class="mb-5">
+                Unlock German fluency with this comprehensive language learning
+                memo
+            </h5>
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <a class="btn btn-primary btn-lg m-2 text-nowrap w-100" href="{% url "vocabulary:list_word" %}">
+                        Search Words
+                        <i class="fa-solid fa-magnifying-glass mx-2"></i>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4" >
+                    <a class="btn btn-primary btn-lg m-2 text-nowrap w-100" href="{% url "vocabulary:list_composition" %}">
+                        Search Compositions
+                        <i class="fa-solid fa-magnifying-glass mx-2"></i>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <a class="btn btn-primary btn-lg m-2 text-nowrap w-100" href="{% url "vocabulary:list_sentence" %}">
+                        Search Sentences
+                        <i class="fa-solid fa-magnifying-glass mx-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,102 @@
+{% extends "_base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+
+<section class="container">
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+            <div class="toast-container position-fixed top-25 end-0 p-3">
+                <div
+                    class="toast show"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                >
+                    <div
+                        class="toast-header bg-danger text-white d-flex justify-content-between"
+                    >
+                        <div class="d-flex-align-items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <strong>Error</strong>
+                        </div>
+                        <button
+                            type="button"
+                            class="btn p-0 m-0 text-white"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="toast-body">{{error|escape}}</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+        <div class="toast-container position-fixed top-25 end-0 p-3">
+            <div
+                class="toast show"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+            >
+                <div
+                    class="toast-header bg-danger text-white d-flex justify-content-between"
+                >
+                    <div class="d-flex-align-items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <strong>Error</strong>
+                    </div>
+                    <button
+                        type="button"
+                        class="btn p-0 m-0 text-white"
+                        data-bs-dismiss="toast"
+                        aria-label="Close"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="toast-body">{{error|escape}}</div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div
+        class="d-flex justify-content-center align-items-center login__container"
+    >
+        <div class="card shadow-lg p-5 login__container-card">
+            <h1 class="fw-bold">Login</h1>
+            <form class="mt-5" method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form-floating mb-3">
+                    {% render_field field name=field.name class="form-control" %}
+                    <label for="{{field.name}}"> {{field.label}} </label>
+                </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button
+                        data-mdb-ripple-init
+                        type="submit"
+                        class="btn btn-primary w-75"
+                    >
+                        Login
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

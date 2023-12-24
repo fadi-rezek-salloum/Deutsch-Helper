@@ -1,0 +1,141 @@
+{% extends "_base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %} Create Composition {%endblock title %}
+
+{% block content %}
+
+<section class="container py-5">
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+            <div class="toast-container position-fixed top-25 end-0 p-3">
+                <div
+                    class="toast show"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                >
+                    <div
+                        class="toast-header bg-danger text-white d-flex justify-content-between"
+                    >
+                        <div class="d-flex-align-items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <strong>Error</strong>
+                        </div>
+                        <button
+                            type="button"
+                            class="btn p-0 m-0 text-white"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="toast-body">{{error|escape}}</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+        <div class="toast-container position-fixed top-25 end-0 p-3">
+            <div
+                class="toast show"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+            >
+                <div
+                    class="toast-header bg-danger text-white d-flex justify-content-between"
+                >
+                    <div class="d-flex-align-items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <strong>Error</strong>
+                    </div>
+                    <button
+                        type="button"
+                        class="btn p-0 m-0 text-white"
+                        data-bs-dismiss="toast"
+                        aria-label="Close"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="toast-body">{{error|escape}}</div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div
+                    class="toast show"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                >
+                    <div
+                        class="toast-header {% if message.tags == "success" %}bg-success{% else %}bg-danger{% endif %} text-white d-flex justify-content-between"
+                    >
+                        <div class="d-flex-align-items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <strong>
+                                {{message.tags|capfirst}}
+                            </strong>
+                        </div>
+                        <button
+                            type="button"
+                            class="btn p-0 m-0 text-white"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="toast-body">{{message}}</div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-lg p-5 mx-auto">
+        <h1 class="page__title">
+            Create Composition
+        </h1>
+        <form class="mt-5" method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-floating mb-3">
+                    {% if field.name == "notes" %}
+                        <div class="form-floating">
+                            <textarea class="form-control" id="{{field.name}}" name="{{field.name}}" style="height: 120px"></textarea>
+                            <label for="{{field.name}}">
+                                {{field.label}}
+                            </label>
+                        </div>
+                    {% else %}
+                        {% render_field field name=field.name class="form-control" %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        
+            <div class="d-flex justify-content-center mt-4">
+                <button
+                    type="submit"
+                    class="btn btn-primary w-75"
+                >
+                    Create Composition
+                    <i class="fa-solid fa-plus-circle"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock content %}

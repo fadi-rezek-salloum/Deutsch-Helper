@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap");
+
+* {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: normal;
+}
+
+.dropdown__link-hover:hover {
+    background-color: #2867be;
+    color: white;
+}
+
+.logo {
+    height: 50px;
+}
+
+.login__container-card {
+    width: 75%;
+}
+
+.hero__container {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("/static/images/hero.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.ms-n5 {
+    margin-left: -35px;
+}
+
+.search__input-container {
+    width: 400px;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+    .logo {
+        height: 35px;
+    }
+
+    .page__title {
+        font-size: 0.8rem;
+    }
+
+    .search__input-container {
+        width: 200px;
+    }
+}
