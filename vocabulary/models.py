@@ -7,6 +7,7 @@ class Word(models.Model):
         ADJECTIVE = "AD", "Adjektive"
         VERB = "VE", "Verben"
         MODAL_VERB = "MVE", "Modal Verben"
+        INTERJEKTIONEN = "INTER", "Interjektionen"
 
     class GENDER_CHOICES(models.TextChoices):
         M = "M", "Maskulin"
