@@ -9,6 +9,7 @@ class Word(models.Model):
         MODAL_VERB = "MVE", "Modal Verben"
         INTERJEKTIONEN = "INTER", "Interjektionen"
         ADVERB = "ADV", "Adverb"
+        PRONOMEN = "PRO", "Pronomen"
         FRAGEPRONOMEN = "FPRO", "Fragepronomen"
 
     class GENDER_CHOICES(models.TextChoices):
