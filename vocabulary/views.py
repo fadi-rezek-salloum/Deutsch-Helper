@@ -174,7 +174,12 @@ class ListVocabularyWordView(generic.ListView):
         qs = self.get_queryset()
 
         if q:
-            qs = qs.filter(Q(content__icontains=q) | Q(translation_en__icontains=q))
+            qs = qs.filter(
+                Q(content__icontains=q)
+                | Q(translation_en__icontains=q)
+                | Q(f_form__icontains=q)
+                | Q(p_form__icontains=q)
+            )
 
         data = []
 
