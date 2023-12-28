@@ -18,6 +18,9 @@ class Word(models.Model):
 
     content = models.CharField(max_length=70)
 
+    f_form = models.CharField("Feminin (Form)", max_length=70, null=True, blank=True)
+    p_form = models.CharField("Plural (Form)", max_length=70, null=True, blank=True)
+
     category = models.CharField(
         max_length=5, choices=CATEGORY_CHOICES.choices, null=True, blank=True
     )
