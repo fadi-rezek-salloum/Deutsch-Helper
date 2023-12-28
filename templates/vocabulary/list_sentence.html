@@ -34,8 +34,13 @@
                     {% for sentence in object_list %}
                         <tr>
                             <td>
+                                {% if request.user.is_superuser %}
+                                <a href="{% url "vocabulary:update_sentence" sentence.id %}">
+                                    {{sentence.content}}
+                                </a>
+                                {% else %}
                                 {{sentence.content}}
-                            </td>
+                                {% endif %}
                             <td>
                                 {{sentence.translation_en}}
                             </td>
@@ -131,7 +136,13 @@
                         outputTableBody.innerHTML += `
                             <tr>
                                 <td>
+                                    {% if request.user.is_superuser %}
+                                    <a href="/vocabulary/sentence/update/${item.id}">
+                                        ${item.content}
+                                    </a>
+                                    {% else %}
                                     ${item.content}
+                                    {% endif %}
                                 </td>
                                 <td>
                                     ${item.translation_en}

@@ -34,7 +34,13 @@
                     {% for composition in object_list %}
                         <tr>
                             <td>
+                                {% if request.user.is_superuser %}
+                                <a href="{% url "vocabulary:update_composition" composition.id %}">
+                                    {{composition.content}}
+                                </a>
+                                {% else %}
                                 {{composition.content}}
+                                {% endif %}
                             </td>
                             <td>
                                 {{composition.translation_en}}
@@ -131,7 +137,13 @@
                         outputTableBody.innerHTML += `
                             <tr>
                                 <td>
+                                    {% if request.user.is_superuser %}
+                                    <a href="/vocabulary/composition/update/${item.id}">
+                                        ${item.content}
+                                    </a>
+                                    {% else %}
                                     ${item.content}
+                                    {% endif %}
                                 </td>
                                 <td>
                                     ${item.translation_en}
