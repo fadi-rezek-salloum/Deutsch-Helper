@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.forms import model_to_dict
 from django.http.response import JsonResponse
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -45,6 +46,23 @@ class CreateVocabularyWordView(SuperuserRequiredMixin, generic.CreateView):
         return redirect(request.path_info)
 
 
+class UpdateVocabularyWordView(SuperuserRequiredMixin, generic.UpdateView):
+    model = Word
+    form_class = WordCreationForm
+    template_name = "vocabulary/create_word.html"
+
+    def form_valid(self, form):
+        messages.success(self.request, "You have successfully updated this vocabulary word!")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "There is an error updating this vocabulary word!")
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("vocabulary:update_word", args=(self.kwargs["pk"],))
+
+
 class CreateVocabularyCompositionView(SuperuserRequiredMixin, generic.CreateView):
     model = Composition
     form_class = CompositionCreationForm
@@ -76,6 +94,25 @@ class CreateVocabularyCompositionView(SuperuserRequiredMixin, generic.CreateView
         return redirect(request.path_info)
 
 
+class UpdateVocabularyCompositionView(SuperuserRequiredMixin, generic.UpdateView):
+    model = Composition
+    form_class = CompositionCreationForm
+    template_name = "vocabulary/create_composition.html"
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, "You have successfully updated this vocabulary composition!"
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "There is an error updating this vocabulary composition!")
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("vocabulary:update_composition", args=(self.kwargs["pk"],))
+
+
 class CreateVocabularySentenceView(SuperuserRequiredMixin, generic.CreateView):
     model = Sentence
     form_class = SentenceCreationForm
@@ -105,6 +142,25 @@ class CreateVocabularySentenceView(SuperuserRequiredMixin, generic.CreateView):
             messages.error(request, "There is an error creating a new vocabulary sentence!")
 
         return redirect(request.path_info)
+
+
+class UpdateVocabularySentenceView(SuperuserRequiredMixin, generic.UpdateView):
+    model = Sentence
+    form_class = SentenceCreationForm
+    template_name = "vocabulary/create_sentence.html"
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, "You have successfully updated this vocabulary sentence!"
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "There is an error updating this vocabulary sentence!")
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("vocabulary:update_sentence", args=(self.kwargs["pk"],))
 
 
 @method_decorator(csrf_exempt, name="dispatch")
