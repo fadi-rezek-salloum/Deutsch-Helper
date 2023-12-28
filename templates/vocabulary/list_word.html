@@ -188,7 +188,16 @@
                                         View Notes
                                         <i class="fa-regular fa-eye mx-1"></i>
                                     </button>
-                                    <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
+                                    `
+                                }
+                                </td>
+                            </tr>
+                        `;
+
+                        if(item.notes) {
+                            outputTable.innerHTML += `
+                                ${item.notes == "" ? "" :
+                                    `<div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -204,9 +213,8 @@
                                         </div>
                                     </div>`
                                 }
-                                </td>
-                            </tr>
-                        `;
+                            `
+                        }
                     });                 
                 } else {
                     dataTable.style.display = "none"
