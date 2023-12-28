@@ -127,7 +127,7 @@
     const searchInput = document.getElementById("search_vocabulary");
     const dataTable = document.getElementById("data-table")
     const outputTable = document.getElementById("output-table")
-    const outputTableBody = document.getElementById("output-table-body")
+    const outputTableBody = outputTable.querySelector("#output-table-body")
 
     outputTable.style.display = "none"
 
@@ -145,10 +145,8 @@
             })
             .then((res) => res.json())
             .then((data) => {
-                
-
                 if(data.length > 0) {
-                    empty.classList.add("d-none")                    
+                    empty.classList.add("d-none")           
 
                     dataTable.style.display = "none"
                     outputTable.style.display = "block"
@@ -156,7 +154,7 @@
                     data.forEach((item) => {
                         const modalId = `notes-new-${item.id}`;
                         
-                        outputTableBody.innerHTML += `
+                        const rowHTML = `
                             <tr>
                                 <td>
                                     {% if request.user.is_superuser %}
@@ -193,9 +191,11 @@
                                 </td>
                             </tr>
                         `;
-
-                        if(item.notes) {
-                            outputTable.innerHTML += `
+                    
+                        outputTableBody.insertAdjacentHTML('beforeend', rowHTML);
+                    
+                        if (item.notes !== "") {
+                            const modalHTML = `
                                 ${item.notes == "" ? "" :
                                     `<div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -213,9 +213,11 @@
                                         </div>
                                     </div>`
                                 }
-                            `
+                            `;
+                            
+                            outputTable.insertAdjacentHTML('beforeend', modalHTML);
                         }
-                    });                 
+                    });             
                 } else {
                     dataTable.style.display = "none"
                     outputTable.style.display = "block"
