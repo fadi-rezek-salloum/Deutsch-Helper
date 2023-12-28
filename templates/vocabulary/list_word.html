@@ -66,27 +66,27 @@
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notes-{{word.id}}">
                                     View Notes
                                     <i class="fa-regular fa-eye mx-1"></i>
-                                </button>
-                                <div class="modal fade" id="notes-{{word.id}}" tabindex="-1" aria-labelledby="notes-{{word.id}}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                                {{word.content}}
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {{word.notes}}
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                </button> 
                                 {% else %}
                                 -
                                 {% endif %}
                             </td>
                         </tr>
+                        <div class="modal fade" id="notes-{{word.id}}" tabindex="-1" aria-labelledby="notes-{{word.id}}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                        {{word.content}}
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {{word.notes}}
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     {% empty %}
                     <tr>
                         <td colspan="8" class="text-center">
