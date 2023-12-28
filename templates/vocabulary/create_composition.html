@@ -2,7 +2,14 @@
 
 {% load widget_tweaks %}
 
-{% block title %} Create Composition {%endblock title %}
+{% block title %}
+{% if "update" in request.path %}
+Update
+{% else %}
+Create
+{% endif %}
+Composition
+{%endblock title %}
 
 {% block content %}
 
@@ -103,9 +110,19 @@
     {% endif %}
 
     <div class="card shadow-lg p-5 mx-auto">
-        <h1 class="page__title">
-            Create Composition
-        </h1>
+        <div class="d-flex alig-items-center justify-content-between">
+            <h1 class="page__title">
+                {% if "update" in request.path %}
+                Update
+                {% else %}
+                Create
+                {% endif %}
+                Composition
+            </h1>
+            <button type="button" class="btn helper__popover-icon" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="Ä &nbsp; ä &nbsp; | &nbsp; Ö &nbsp; ö &nbsp; | &nbsp; Ü &nbsp; ü &nbsp; | &nbsp; ß">
+                ?
+            </button>
+        </div>
         <form class="mt-5" method="post">
             {% csrf_token %}
 
@@ -130,8 +147,17 @@
                     type="submit"
                     class="btn btn-primary w-75"
                 >
-                    Create Composition
+                    {% if "update" in request.path %}
+                    Update
+                    {% else %}
+                    Create
+                    {% endif %}
+                    Composition
+                    {% if "update" in request.path %}
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    {% else %}
                     <i class="fa-solid fa-plus-circle"></i>
+                    {% endif %}
                 </button>
             </div>
         </form>
@@ -139,3 +165,13 @@
 </section>
 
 {% endblock content %}
+
+
+{% block extra_scripts %}
+
+<script>
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+</script>
+
+{% endblock extra_scripts %}

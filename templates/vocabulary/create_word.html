@@ -2,7 +2,14 @@
 
 {% load widget_tweaks %}
 
-{% block title %} Create Word {%endblock title %}
+{% block title %}
+{% if "update" in request.path %}
+Update
+{% else %}
+Create
+{% endif %}
+Word
+{%endblock title %}
 
 {% block content %}
 
@@ -82,7 +89,12 @@
                         class="toast-header {% if message.tags == "success" %}bg-success{% else %}bg-danger{% endif %} text-white d-flex justify-content-between"
                     >
                         <div class="d-flex-align-items-center gap-2">
+                            {% if message.tags == "success" %}
+                            <i class="fa-regular fa-circle-check"></i>
+                            {% else %}
                             <i class="fa-solid fa-triangle-exclamation"></i>
+                            {% endif %}
+
                             <strong>
                                 {{message.tags|capfirst}}
                             </strong>
@@ -103,9 +115,20 @@
     {% endif %}
 
     <div class="card shadow-lg p-5 mx-auto">
-        <h1 class="page__title">
-            Create Word
-        </h1>
+        <div class="d-flex alig-items-center justify-content-between">
+            <h1 class="page__title">
+                {% if "update" in request.path %}
+                Update
+                {% else %}
+                Create
+                {% endif %}
+                Word
+            </h1>
+            <button type="button" class="btn helper__popover-icon" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="Ä &nbsp; ä &nbsp; | &nbsp; Ö &nbsp; ö &nbsp; | &nbsp; Ü &nbsp; ü &nbsp; | &nbsp; ß">
+                ?
+            </button>
+        </div>
+
         <form class="mt-5" method="post">
             {% csrf_token %}
 
@@ -116,7 +139,7 @@
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {% elif field.name == "notes" %}
                         <div class="form-floating">
-                            <textarea class="form-control" id="{{field.name}}" name="{{field.name}}" style="height: 120px"></textarea>
+                            <textarea class="form-control" id="{{field.name}}" name="{{field.name}}" style="height: 120px">{% if field.value %}{{field.value}}{% endif %}</textarea>
                             <label for="{{field.name}}">
                                 {{field.label}}
                             </label>
@@ -133,8 +156,17 @@
                     type="submit"
                     class="btn btn-primary w-75"
                 >
-                    Create Word
+                    {% if "update" in request.path %}
+                    Update
+                    {% else %}
+                    Create
+                    {% endif %}    
+                    Word
+                    {% if "update" in request.path %}
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    {% else %}
                     <i class="fa-solid fa-plus-circle"></i>
+                    {% endif %}
                 </button>
             </div>
         </form>
@@ -142,3 +174,13 @@
 </section>
 
 {% endblock content %}
+
+
+{% block extra_scripts %}
+
+<script>
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+</script>
+
+{% endblock extra_scripts %}

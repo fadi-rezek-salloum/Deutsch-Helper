@@ -36,7 +36,13 @@
                     {% for word in object_list %}
                         <tr>
                             <td>
+                                {% if request.user.is_superuser %}
+                                <a href="{% url "vocabulary:update_word" word.id %}">
+                                    {{word.content}}
+                                </a>
+                                {% else %}
                                 {{word.content}}
+                                {% endif %}
                             </td>
                             <td>
                                 {{word.translation_en}}
@@ -136,12 +142,20 @@
                     outputTable.style.display = "block"
 
                     data.forEach((item) => {
+                        console.log(item)
+
                         const modalId = `notes-new-${item.id}`;
                         
                         outputTableBody.innerHTML += `
                             <tr>
                                 <td>
+                                    {% if request.user.is_superuser %}
+                                    <a href="/vocabulary/word/update/${item.id}">
+                                        ${item.content}
+                                    </a>
+                                    {% else %}
                                     ${item.content}
+                                    {% endif %}
                                 </td>
                                 <td>
                                     ${item.translation_en}
