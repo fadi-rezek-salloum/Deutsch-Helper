@@ -20,7 +20,7 @@
 
 .hero__container {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url("/static/images/hero.jpg");
+        url("/static/images/hero.webp");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
