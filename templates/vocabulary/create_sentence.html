@@ -89,7 +89,11 @@ Sentence
                         class="toast-header {% if message.tags == "success" %}bg-success{% else %}bg-danger{% endif %} text-white d-flex justify-content-between"
                     >
                         <div class="d-flex-align-items-center gap-2">
+                            {% if message.tags == "success" %}
+                            <i class="fa-regular fa-circle-check"></i>
+                            {% else %}
                             <i class="fa-solid fa-triangle-exclamation"></i>
+                            {% endif %}
                             <strong>
                                 {{message.tags|capfirst}}
                             </strong>
@@ -130,7 +134,7 @@ Sentence
                 <div class="form-floating mb-3">
                     {% if field.name == "notes" %}
                         <div class="form-floating">
-                            <textarea class="form-control" id="{{field.name}}" name="{{field.name}}" style="height: 120px"></textarea>
+                            <textarea class="form-control" id="{{field.name}}" name="{{field.name}}" style="height: 120px">{% if field.value %}{{field.value}}{% endif %}</textarea>
                             <label for="{{field.name}}">
                                 {{field.label}}
                             </label>
