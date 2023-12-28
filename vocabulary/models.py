@@ -11,6 +11,7 @@ class Word(models.Model):
         ADVERB = "ADV", "Adverb"
         PRONOMEN = "PRO", "Pronomen"
         FRAGEPRONOMEN = "FPRO", "Fragepronomen"
+        KONJUNKTION = "KONJ", "Konjunktion"
 
     class GENDER_CHOICES(models.TextChoices):
         M = "M", "Maskulin"
