@@ -123,7 +123,7 @@
 </div>      
 
 {% block extra_scripts %}
-<script>
+<script delay>
     const searchInput = document.getElementById("search_vocabulary");
     const dataTable = document.getElementById("data-table")
     const outputTable = document.getElementById("output-table")
@@ -136,6 +136,8 @@
 
         outputTableBody.innerHTML = ""
 
+        const empty = document.getElementById("no_results")
+
         if (q.trim().length > 0) {
             fetch("{% url 'vocabulary:list_word' %}", {
                 body: JSON.stringify({q: q}),
@@ -143,7 +145,7 @@
             })
             .then((res) => res.json())
             .then((data) => {
-                const empty = document.getElementById("no_results")
+                
 
                 if(data.length > 0) {
                     empty.classList.add("d-none")                    
@@ -152,8 +154,6 @@
                     outputTable.style.display = "block"
 
                     data.forEach((item) => {
-                        console.log(item)
-
                         const modalId = `notes-new-${item.id}`;
                         
                         outputTableBody.innerHTML += `
@@ -198,7 +198,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    ${item.notes}
+                                                    ${item.notes.replace(/(<([^>]+)>)/gi, "")}
                                                 </div>
                                             </div>
                                         </div>
@@ -209,6 +209,9 @@
                         `;
                     });                 
                 } else {
+                    dataTable.style.display = "none"
+                    outputTable.style.display = "block"
+                    outputTableBody.innerHTML = ""
                     empty.classList.remove("d-none")
                 }
             })
@@ -216,6 +219,7 @@
                 console.error("Error:", error);
             });
         } else {
+            empty.classList.add("d-none")
             dataTable.style.display = "block"
             outputTable.style.display = "none"
         }

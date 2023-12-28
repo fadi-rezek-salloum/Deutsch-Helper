@@ -51,26 +51,27 @@
                                     View Notes
                                     <i class="fa-regular fa-eye mx-1"></i>
                                 </button>
-                                <div class="modal fade" id="notes-{{composition.id}}" tabindex="-1" aria-labelledby="notes-{{composition.id}}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                                {{composition.content}}
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {{composition.notes}}
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 {% else %}
                                 -
                                 {% endif %}
                             </td>
                         </tr>
+                        <div class="modal fade" id="notes-{{composition.id}}" tabindex="-1" aria-labelledby="notes-{{composition.id}}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                            {{composition.content}}
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{composition.notes}}
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
                     {% empty %}
                     <tr>
                         <td colspan="6" class="text-center">
@@ -103,7 +104,8 @@
 </div>      
 
 {% block extra_scripts %}
-<script>
+
+<script delay>
     const searchInput = document.getElementById("search_vocabulary");
     const dataTable = document.getElementById("data-table")
     const outputTable = document.getElementById("output-table")
@@ -112,6 +114,94 @@
     outputTable.style.display = "none"
 
     searchInput.addEventListener("input", (e) => {
+        let q = e.target.value;
+
+        outputTableBody.innerHTML = ""
+
+        const empty = document.getElementById("no_results")
+
+        if (q.trim().length > 0) {
+            fetch("{% url 'vocabulary:list_composition' %}", {
+                body: JSON.stringify({q: q}),
+                method: "POST"
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if(data.length > 0) {
+                    empty.classList.add("d-none")                    
+
+                    dataTable.style.display = "none"
+                    outputTable.style.display = "block"
+
+                    data.forEach((item) => {
+                        const modalId = `notes-new-${item.id}`;
+                        console.log(item)
+                        outputTableBody.innerHTML += `
+                            <tr>
+                                <td>
+                                    {% if request.user.is_superuser %}
+                                    <a href="/vocabulary/composition/update/${item.id}">
+                                        ${item.content}
+                                    </a>
+                                    {% else %}
+                                    ${item.content}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    ${item.translation_en}
+                                </td>
+                                <td>
+                                    ${item.notes == "" ? "-" : 
+                                    `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#${modalId}">
+                                        View Notes
+                                        <i class="fa-regular fa-eye mx-1"></i>
+                                    </button>
+                                    `
+                                }
+                                </td>
+                            </tr> 
+                        `;
+
+                        if(item.notes) {
+                            outputTable.innerHTML += `
+                                ${item.notes == "" ? "" :
+                                    `<div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="${modalId}-label">
+                                                        ${item.content}
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ${item.notes.replace(/(<([^>]+)>)/gi, "")}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+                                }
+                            `
+                        }
+                    });
+                } else {
+                    dataTable.style.display = "none"
+                    outputTable.style.display = "block"
+                    outputTableBody.innerHTML = ""
+                    empty.classList.remove("d-none")
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        } else {
+            empty.classList.add("d-none")
+            dataTable.style.display = "block"
+            outputTable.style.display = "none"
+        }
+    });
+
+    {% comment %} searchInput.addEventListener("input", (e) => {
         let q = e.target.value;
 
         outputTableBody.innerHTML = ""
@@ -126,6 +216,7 @@
                 const empty = document.getElementById("no_results")
 
                 if(data.length > 0) {
+                    
                     empty.classList.add("d-none")                    
 
                     dataTable.style.display = "none"
@@ -154,7 +245,16 @@
                                         View Notes
                                         <i class="fa-regular fa-eye mx-1"></i>
                                     </button>
-                                    <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
+                                    `
+                                }
+                                </td>
+                            </tr>
+                        `;
+
+                        if(item.notes) {
+                            outputTable.innerHTML += `
+                                ${item.notes == "" ? "" :
+                                    `<div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}-label" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -170,11 +270,13 @@
                                         </div>
                                     </div>`
                                 }
-                                </td>
-                            </tr>
-                        `;
+                            `
+                        }
                     });                 
                 } else {
+                    dataTable.style.display = "none"
+                    outputTable.style.display = "block"
+                    outputTableBody.innerHTML = ""
                     empty.classList.remove("d-none")
                 }
             })
@@ -185,7 +287,7 @@
             dataTable.style.display = "block"
             outputTable.style.display = "none"
         }
-    });
+    }); {% endcomment %}
 </script>
 {% endblock extra_scripts %}
 
