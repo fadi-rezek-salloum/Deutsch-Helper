@@ -32,7 +32,8 @@ class CreateVocabularyWordView(SuperuserRequiredMixin, generic.CreateView):
 
             if created:
                 word.translation_en = translation_en
-                word.translation_ar = form.cleaned_data.get("translation_ar")
+                word.f_form = form.cleaned_data.get("f_form")
+                word.p_form = form.cleaned_data.get("p_form")
                 word.notes = form.cleaned_data.get("notes")
                 word.gender = form.cleaned_data.get("gender")
                 word.category = form.cleaned_data.get("category")
