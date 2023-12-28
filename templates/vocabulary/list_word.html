@@ -26,6 +26,8 @@
                 <thead>
                     <tr>
                         <th class="bg-primary text-white fw-bold">Word</th>
+                        <th class="bg-primary text-white fw-bold">Feminin (Form)</th>
+                        <th class="bg-primary text-white fw-bold">Plural (Form)</th>
                         <th class="bg-primary text-white fw-bold">Translation (EN)</th>
                         <th class="bg-primary text-white fw-bold">Gender</th>
                         <th class="bg-primary text-white fw-bold">Category</th>
@@ -43,6 +45,12 @@
                                 {% else %}
                                 {{word.content}}
                                 {% endif %}
+                            </td>
+                            <td>
+                                {{ word.f_form|default:"-" }}
+                            </td>
+                            <td>
+                                {{ word.p_form|default:"-" }}
                             </td>
                             <td>
                                 {{word.translation_en}}
@@ -81,7 +89,7 @@
                         </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="8" class="text-center">
                             There are no words added yet!
                         </td>
                     </tr>
@@ -156,6 +164,12 @@
                                     {% else %}
                                     ${item.content}
                                     {% endif %}
+                                </td>
+                                <td>
+                                    ${item.f_form == null ? "-" : item.f_form}
+                                </td>
+                                <td>
+                                    ${item.p_form == null ? "-" : item.p_form}
                                 </td>
                                 <td>
                                     ${item.translation_en}
